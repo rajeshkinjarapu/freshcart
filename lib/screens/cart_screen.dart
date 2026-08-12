@@ -1,0 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/cart_item.dart';
+import '../providers/cart_provider.dart';
+import '../services/cart_service.dart';
+import 'checkout_screen.dart';
+class CartScreen extends StatelessWidget { const CartScreen({super.key}); @override Widget build(BuildContext c)=>ChangeNotifierProvider(create:(_)=>CartProvider(),child:Scaffold(appBar:AppBar(title:const Text('Your cart')),body:StreamBuilder<List<CartItem>>(stream:CartService().watch(),builder:(c,s){if(!s.hasData)return const Center(child:CircularProgressIndicator());final p=c.read<CartProvider>();p.replace(s.data!);if(p.items.isEmpty)return const Center(child:Text('Your cart is empty'));return Column(children:[Expanded(child:ListView.builder(itemCount:p.items.length,itemBuilder:(_,i){final x=p.items[i];return ListTile(title:Text(x.name),subtitle:Text('₹${x.price.toStringAsFixed(0)} × ${x.quantity}'),trailing:Row(mainAxisSize:MainAxisSize.min,children:[IconButton(onPressed:()=>p.change(x,x.quantity-1),icon:const Icon(Icons.remove_circle_outline)),Text('${x.quantity}'),IconButton(onPressed:()=>p.change(x,x.quantity+1),icon:const Icon(Icons.add_circle_outline))]));})),Padding(padding:const EdgeInsets.all(16),child:Column(children:[_row('Subtotal',p.subtotal),_row('Delivery',p.delivery),_row('Discount',-p.discount),_row('Total',p.total),const SizedBox(height:12),SizedBox(width:double.infinity,child:FilledButton(onPressed:()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>const CheckoutScreen())),child:const Text('Proceed to checkout')))]))]);}))); }
+Widget _row(String s,double v)=>Row(mainAxisAlignment:MainAxisAlignment.spaceBetween,children:[Text(s),Text('₹${v.toStringAsFixed(0)}')]); }

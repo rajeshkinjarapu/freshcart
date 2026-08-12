@@ -1,0 +1,1 @@
+class Category { final String id, name, imageUrl; final int priority; const Category({required this.id, required this.name, this.imageUrl = '', this.priority = 0}); factory Category.fromMap(String id, Map<String,dynamic> m) => Category(id:id,name:m['name'] ?? '',imageUrl:m['imageUrl'] ?? '',priority:m['priority'] ?? 0); }

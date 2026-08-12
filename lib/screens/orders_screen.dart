@@ -1,0 +1,5 @@
+import 'package:flutter/material.dart';
+import '../models/order_model.dart';
+import '../services/order_service.dart';
+import 'order_tracking_screen.dart';
+class OrdersScreen extends StatelessWidget { const OrdersScreen({super.key}); @override Widget build(BuildContext c)=>Scaffold(appBar:AppBar(title:const Text('My orders')),body:StreamBuilder<List<OrderModel>>(stream:OrderService().orders(),builder:(c,s){if(!s.hasData)return const Center(child:CircularProgressIndicator());if(s.data!.isEmpty)return const Center(child:Text('No orders yet'));return ListView.builder(padding:const EdgeInsets.all(12),itemCount:s.data!.length,itemBuilder:(_,i){final o=s.data![i];return Card(child:ListTile(onTap:()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>OrderTrackingScreen(order:o))),leading:const CircleAvatar(child:Icon(Icons.receipt_long)),title:Text('Order #${o.id.substring(0,6).toUpperCase()}'),subtitle:Text('${o.items.length} items • ₹${o.total.toStringAsFixed(0)}'),trailing:Chip(label:Text(o.status.replaceAll('_',' '))));});})); }

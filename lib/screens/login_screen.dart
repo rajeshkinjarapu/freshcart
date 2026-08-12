@@ -1,0 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import '../services/auth_service.dart';
+
+class LoginScreen extends StatefulWidget { const LoginScreen({super.key}); @override State<LoginScreen> createState() => _LoginScreenState(); }
+class _LoginScreenState extends State<LoginScreen> {
+  final phone = TextEditingController(); final otp = TextEditingController(); String? verificationId; bool waiting = false;
+  void send() async { setState(() => waiting = true); await AuthService.instance.sendOtp('+91${phone.text.trim()}', onCodeSent: (id) => setState(() { verificationId = id; waiting = false; }), onError: (e) { setState(() => waiting = false); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message ?? 'Could not send OTP'))); }); }
+  void verify() async { try { final result = await AuthService.instance.verifyOtp(verificationId!, otp.text.trim()); final exists = await AuthService.instance.userProfileExists(result.user!.uid); if (mounted) Navigator.pushReplacementNamed(context, exists ? '/home' : '/profile-setup'); } catch (_) { if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid OTP'))); } }
+  @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(), body: Padding(padding: const EdgeInsets.all(24), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Welcome to FreshCart', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)), const SizedBox(height: 8), const Text('Sign in with your mobile number'), const SizedBox(height: 28), TextField(controller: phone, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone number', prefixText: '+91 ')), if (verificationId != null) ...[const SizedBox(height: 16), TextField(controller: otp, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: '6-digit OTP'))], const SizedBox(height: 24), SizedBox(width: double.infinity, child: FilledButton(onPressed: waiting ? null : (verificationId == null ? send : verify), child: Text(waiting ? 'Sending…' : verificationId == null ? 'Send OTP' : 'Verify OTP')))])));
+}

@@ -1,0 +1,3 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+class ProfileService { final db=FirebaseFirestore.instance; String get uid=>FirebaseAuth.instance.currentUser!.uid; Stream<DocumentSnapshot<Map<String,dynamic>>> profile()=>db.doc('users/$uid').snapshots(); Stream<QuerySnapshot<Map<String,dynamic>>> coupons()=>db.collection('coupons').where('isActive',isEqualTo:true).snapshots(); Stream<QuerySnapshot<Map<String,dynamic>>> wishlist()=>db.collection('users/$uid/wishlist').snapshots(); Future<void> toggleWishlist(String id,Map<String,dynamic> data)async{final r=db.doc('users/$uid/wishlist/$id');(await r.get()).exists?await r.delete():await r.set(data);} }

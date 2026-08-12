@@ -1,0 +1,4 @@
+const admin = require('firebase-admin'); admin.initializeApp(); const db = admin.firestore();
+const categories = [{id:'vegetables',name:'Vegetables',priority:1},{id:'fruits',name:'Fruits',priority:2},{id:'dairy',name:'Dairy',priority:3},{id:'snacks',name:'Snacks',priority:4}];
+const products = [{id:'tomato-1kg',name:'Fresh Tomatoes',categoryId:'vegetables',brand:'FreshCart',unit:'1 kg',price:80,discountPrice:65,stockQuantity:100,isAvailable:true,avgRating:4.5,images:[]},{id:'milk-1l',name:'Full Cream Milk',categoryId:'dairy',brand:'Daily Fresh',unit:'1 L',price:70,stockQuantity:80,isAvailable:true,avgRating:4.6,images:[]}];
+(async()=>{const b=db.batch(); categories.forEach(x=>b.set(db.doc(`categories/${x.id}`),{...x,imageUrl:''})); products.forEach(x=>b.set(db.doc(`products/${x.id}`),{...x,description:'Quality product',createdAt:admin.firestore.FieldValue.serverTimestamp()})); await b.commit(); console.log('Seed complete');})();

@@ -1,0 +1,8 @@
+{
+  "indexes": [
+    {"collectionGroup": "products", "queryScope": "COLLECTION", "fields": [{"fieldPath": "categoryId", "order": "ASCENDING"}, {"fieldPath": "isAvailable", "order": "ASCENDING"}, {"fieldPath": "avgRating", "order": "DESCENDING"}]},
+    {"collectionGroup": "orders", "queryScope": "COLLECTION", "fields": [{"fieldPath": "userId", "order": "ASCENDING"}, {"fieldPath": "createdAt", "order": "DESCENDING"}]},
+    {"collectionGroup": "coupons", "queryScope": "COLLECTION", "fields": [{"fieldPath": "isActive", "order": "ASCENDING"}, {"fieldPath": "validTill", "order": "ASCENDING"}]}
+  ],
+  "fieldOverrides": []
+}

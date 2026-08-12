@@ -1,0 +1,6 @@
+import 'package:flutter/material.dart';
+import '../models/app_user.dart';
+import '../services/auth_service.dart';
+
+class ProfileSetupScreen extends StatefulWidget { const ProfileSetupScreen({super.key}); @override State<ProfileSetupScreen> createState() => _ProfileSetupScreenState(); }
+class _ProfileSetupScreenState extends State<ProfileSetupScreen> { final name = TextEditingController(), email = TextEditingController(); void save() async { final u = AuthService.instance.currentUser!; await AuthService.instance.saveUser(AppUser(uid: u.uid, name: name.text.trim(), phone: u.phoneNumber ?? '', email: email.text.trim())); if (mounted) Navigator.pushReplacementNamed(context, '/location-setup'); } @override Widget build(BuildContext c) => Scaffold(appBar: AppBar(title: const Text('Your details')), body: Padding(padding: const EdgeInsets.all(24), child: Column(children: [TextField(controller: name, decoration: const InputDecoration(labelText: 'Full name')), const SizedBox(height: 16), TextField(controller: email, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'Email (optional)')), const SizedBox(height: 24), SizedBox(width: double.infinity, child: FilledButton(onPressed: save, child: const Text('Continue')))]))); }

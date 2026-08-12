@@ -1,0 +1,4 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../services/profile_service.dart';
+class WishlistScreen extends StatelessWidget { const WishlistScreen({super.key}); @override Widget build(BuildContext c)=>Scaffold(appBar:AppBar(title:const Text('Wishlist')),body:StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(stream:ProfileService().wishlist(),builder:(c,s){if(!s.hasData)return const Center(child:CircularProgressIndicator());if(s.data!.docs.isEmpty)return const Center(child:Text('Your wishlist is empty'));return ListView(children:s.data!.docs.map((d)=>ListTile(title:Text(d.data()['name']??''),subtitle:Text('₹${d.data()['price']??''}'),trailing:IconButton(icon:const Icon(Icons.delete_outline),onPressed:()=>d.reference.delete())).toList());}));}

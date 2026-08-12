@@ -1,0 +1,3 @@
+import 'package:flutter/foundation.dart';
+import '../models/product.dart';
+class CatalogProvider extends ChangeNotifier { String query=''; String sort='popular'; List<Product> filter(List<Product> source) { var x=source.where((p)=>p.name.toLowerCase().contains(query.toLowerCase())).toList(); if(sort=='low') x.sort((a,b)=>a.salePrice.compareTo(b.salePrice)); if(sort=='high') x.sort((a,b)=>b.salePrice.compareTo(a.salePrice)); if(sort=='popular') x.sort((a,b)=>b.avgRating.compareTo(a.avgRating)); return x; } void setQuery(String v){query=v;notifyListeners();} void setSort(String v){sort=v;notifyListeners();} }

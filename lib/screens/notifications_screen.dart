@@ -1,0 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+class NotificationsScreen extends StatelessWidget { const NotificationsScreen({super.key}); @override Widget build(BuildContext c){final uid=FirebaseAuth.instance.currentUser!.uid;return Scaffold(appBar:AppBar(title:const Text('Notifications')),body:StreamBuilder<QuerySnapshot>(stream:FirebaseFirestore.instance.collection('users/$uid/notifications').orderBy('createdAt',descending:true).snapshots(),builder:(c,s){if(!s.hasData)return const Center(child:CircularProgressIndicator());return ListView(children:s.data!.docs.map((d)=>ListTile(leading:const Icon(Icons.notifications_active,color:Colors.green),title:Text((d.data() as Map)['title']??'FreshCart'),subtitle:Text((d.data() as Map)['body']??''))).toList());}));}}

@@ -1,0 +1,16 @@
+import 'package:flutter/material.dart';
+import '../models/category.dart';
+import '../models/product.dart';
+import '../services/catalog_service.dart';
+import '../widgets/product_card.dart';
+import 'category_products_screen.dart';
+import 'product_detail_screen.dart';
+import 'orders_screen.dart';
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text('FreshCart'), actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.shopping_cart_outlined))]), body: ListView(padding: const EdgeInsets.all(16), children: [Text('Delivering to', style: Theme.of(context).textTheme.bodySmall), InkWell(onTap: () {}, child: const Row(children: [Icon(Icons.location_on, color: Colors.green), Text(' Choose your location', style: TextStyle(fontWeight: FontWeight.bold)), Icon(Icons.keyboard_arrow_down)])), const SizedBox(height: 18), TextField(decoration: const InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'Search groceries and food')), const SizedBox(height: 20), Container(height: 145, decoration: BoxDecoration(color: Colors.green.shade100, borderRadius: BorderRadius.circular(16)), padding: const EdgeInsets.all(20), child: const Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Text('Fresh deals every day', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)), Text('Save more on your essentials')]),), const SizedBox(height: 24), _heading(context, 'Shop by category'), SizedBox(height: 110, child: StreamBuilder<List<Category>>(stream: CatalogService().categories(), builder: (c,s) { if (!s.hasData) return const Center(child: CircularProgressIndicator()); return ListView.separated(scrollDirection: Axis.horizontal, itemCount: s.data!.length, separatorBuilder: (_,__)=>const SizedBox(width:12), itemBuilder: (_,i) { final x=s.data![i]; return InkWell(onTap:()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>CategoryProductsScreen(categoryId:x.id,title:x.name))), child: SizedBox(width:82, child: Column(children:[CircleAvatar(radius:34, backgroundColor: Colors.green.shade50, child: const Icon(Icons.local_grocery_store, color: Colors.green)), const SizedBox(height:6), Text(x.name,maxLines:1,overflow:TextOverflow.ellipsis)])));}); }), const SizedBox(height: 20), _heading(context, 'Best sellers'), SizedBox(height: 265, child: StreamBuilder<List<Product>>(stream: CatalogService().products(), builder: (c,s) { if (!s.hasData) return const Center(child:CircularProgressIndicator()); final items=s.data!..sort((a,b)=>b.avgRating.compareTo(a.avgRating)); return ListView.separated(scrollDirection:Axis.horizontal,itemCount:items.take(8).length,separatorBuilder:(_,__)=>const SizedBox(width:12),itemBuilder:(_,i)=>SizedBox(width:170,child:ProductCard(product:items[i],onTap:()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>ProductDetailScreen(product:items[i])))))); }))]));
+
+  Widget _heading(BuildContext c, String text) => Row(children: [Text(text, style: Theme.of(c).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)), const Spacer(), TextButton(onPressed: () {}, child: const Text('See all'))]);
+}
