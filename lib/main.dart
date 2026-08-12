@@ -10,10 +10,12 @@ import 'screens/location_setup_screen.dart';
 import 'screens/splash_screen.dart';
 import 'screens/app_shell.dart';
 import 'admin/admin_login_screen.dart';
+import 'services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await NotificationService.initialize();
   runApp(const GroceryDeliveryApp());
 }
 
